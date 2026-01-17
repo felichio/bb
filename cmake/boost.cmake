@@ -1,0 +1,2 @@
+set(BOOST_INCLUDE_LIBRARIES beast asio)
+add_subdirectory(external/boost EXCLUDE_FROM_ALL)
