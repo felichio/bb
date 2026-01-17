@@ -8,6 +8,7 @@ target_sources(
     main.cpp
 )
 
+option(B2 "Enable b2 build for boost" OFF)
 if(B2)
   message("Using b2 for boost")
   list(JOIN BOOST_INCLUDE_LIBRARIES "," BOOST_INCLUDE_LIBRARIES_CSV)
