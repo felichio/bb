@@ -8,6 +8,7 @@ target_sources(
     main.cpp
 )
 
+# Boost
 option(B2 "Enable b2 build for boost" OFF)
 if(B2)
   message("Using b2 for boost")
@@ -38,4 +39,4 @@ else()
 endif()
 
 list(TRANSFORM BOOST_INCLUDE_LIBRARIES PREPEND "Boost::" OUTPUT_VARIABLE BOOST_LIBS)
-target_link_libraries(bb PRIVATE "${BOOST_LIBS}")
+target_link_libraries(bb PRIVATE "${BOOST_LIBS}" nlohmann_json::nlohmann_json)

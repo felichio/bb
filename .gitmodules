@@ -1,3 +1,6 @@
 [submodule "external/boost"]
 	path = external/boost
 	url = git@github.com:boostorg/boost.git
+[submodule "external/json"]
+	path = external/json
+	url = git@github.com:nlohmann/json.git
