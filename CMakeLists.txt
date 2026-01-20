@@ -6,5 +6,7 @@ project(BB)
 include(cmake/boost.cmake)
 # nlohmann_json
 include(cmake/nlohmann_json.cmake)
+# spdlog
+include(cmake/spdlog.cmake)
 
 add_subdirectory(src)

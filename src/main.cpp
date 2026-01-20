@@ -3,6 +3,7 @@
 #include <boost/beast.hpp>
 #include <boost/beast/core.hpp>
 #include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
 
 int main(int argc, char *argv[])
 {
@@ -15,4 +16,5 @@ int main(int argc, char *argv[])
   };
 
   std::cout << t.dump() << std::endl;
+  spdlog::info("OK!");
 }
