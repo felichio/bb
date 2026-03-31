@@ -9,4 +9,7 @@ include(cmake/nlohmann_json.cmake)
 # spdlog
 include(cmake/spdlog.cmake)
 
+# .env copy
+FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/.env DESTINATION ${CMAKE_BINARY_DIR}/config)
+
 add_subdirectory(src)
