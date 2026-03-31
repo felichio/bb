@@ -1,4 +1,5 @@
 # find_package(Boost REQUIRED COMPONENTS filesystem)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(bb)
 
@@ -7,6 +8,8 @@ target_sources(
   PRIVATE
     main.cpp
 )
+
+add_subdirectory(util)
 
 # Boost
 option(B2 "Enable b2 build for boost" OFF)
