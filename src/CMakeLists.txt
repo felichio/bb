@@ -10,6 +10,7 @@ target_sources(
 )
 
 add_subdirectory(util)
+add_subdirectory(core)
 
 # Boost
 option(B2 "Enable b2 build for boost" OFF)

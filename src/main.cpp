@@ -4,6 +4,10 @@
 #include <boost/beast/core.hpp>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
+#include <util/EnvReader.hpp>
+#include <core/EventQueue.hpp>
+#include <core/events/PriceEvent.hpp>
+
 
 int main(int argc, char *argv[])
 {
@@ -17,4 +21,20 @@ int main(int argc, char *argv[])
 
   std::cout << t.dump() << std::endl;
   spdlog::info("OK!");
+
+  bb::EnvReader::getReader()->populateEnv();
+
+
+  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("SECRET_TEST"));
+  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
+  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("API_KEY_TEST"));
+
+
+  bb::EventQueue<bb::PriceEvent, 5> eq;
+
+  for (int i = 0; i < 10; i++)
+  {
+    eq.push(bb::PriceEvent(i));
+  }
+
 }
