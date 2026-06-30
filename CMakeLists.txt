@@ -13,3 +13,10 @@ include(cmake/spdlog.cmake)
 FILE(COPY ${CMAKE_CURRENT_SOURCE_DIR}/.env DESTINATION ${CMAKE_BINARY_DIR}/config)
 
 add_subdirectory(src)
+
+if(ENABLE_TESTS)
+  message("ENABLE TESTS OK")
+  include(cmake/googletest.cmake)
+  enable_testing()
+  add_subdirectory(tests)
+endif()
