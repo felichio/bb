@@ -13,6 +13,11 @@ namespace bb
     PriceEvent(uint32_t data) : payload{data}
     {
     }
+
+    bool operator==(const PriceEvent &other) const
+    {
+      return type == other.type && payload == other.payload;
+    }
   };
 
   inline std::ostream &operator<<(std::ostream &out, const PriceEvent &event)
