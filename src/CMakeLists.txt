@@ -1,13 +1,19 @@
 # find_package(Boost REQUIRED COMPONENTS filesystem)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-add_executable(bb)
 
-target_sources(
-  bb
-  PRIVATE
-    main.cpp
-)
+if(ENABLE_TESTS)
+  add_library(bb STATIC)
+else()
+  add_executable(bb)
+
+  target_sources(
+    bb
+    PRIVATE
+      main.cpp
+  )
+endif()
+
 
 add_subdirectory(util)
 add_subdirectory(core)
