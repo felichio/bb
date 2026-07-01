@@ -1,16 +1,16 @@
-add_executable(
-  hello_test
-  hello_test.cpp
-  ${CMAKE_SOURCE_DIR}/src/core/EventQueue.cpp
-)
+FILE(GLOB SOURCE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}" "*.cpp")
+list(TRANSFORM SOURCE_FILES REPLACE "[.]cpp$" "")
 
-target_include_directories(hello_test PRIVATE ${CMAKE_SOURCE_DIR}/src/)
+foreach(test ${SOURCE_FILES})
+  message("-- Adding test ${test} ---")
+  add_executable(${test} "${test}.cpp")
+  target_link_libraries(
+    ${test}
+    GTest::gtest_main
+    GTest::gtest
+    spdlog::spdlog
+    bb
+  )
+  add_test(NAME ${test} COMMAND ${test})
+endforeach()
 
-target_link_libraries(
-  hello_test
-  GTest::gtest_main
-  GTest::gtest
-  spdlog::spdlog
-)
-
-add_test(NAME some COMMAND hello_test)
