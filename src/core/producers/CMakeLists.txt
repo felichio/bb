@@ -1,0 +1,11 @@
+FILE(GLOB SOURCE_FILES "*.cpp")
+FILE(GLOB HEADER_FILES "*.hpp")
+
+target_sources(
+  bb
+  PRIVATE
+      "${SOURCE_FILES}"
+  PUBLIC FILE_SET HEADERS
+      BASE_DIRS "${CMAKE_SOURCE_DIR}/src"
+      FILES "${HEADER_FILES}"
+)
