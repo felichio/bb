@@ -1,5 +1,7 @@
 #include <core/wsclient/WebSocketClient.hpp>
 #include <spdlog/spdlog.h>
+#include <core/events/TradeEvent.hpp>
+#include <iostream>
 
 namespace bb
 {
@@ -40,22 +42,31 @@ namespace bb
   void WebSocketClient::subscribe(nlohmann::json &intent)
   {
     m_wbuffer = intent.dump();
-    m_wss.async_write(net::buffer(m_wbuffer), [this](auto ec, auto) {  });
+    m_wss.async_write(net::buffer(m_wbuffer), [this](auto ec, auto)
+                      { if (ec) spdlog::error("write failed: {}", ec.message()); });
     read();
   }
 
   void WebSocketClient::read()
   {
-    m_wss.async_read(m_rbuffer, [this](beast::error_code ec, std::size_t) {
+    m_wss.async_read(m_rbuffer, [this](beast::error_code ec, std::size_t)
+                     {
                       if (ec) return;
+
                       std::string message{
                         static_cast<const char*>(m_rbuffer.data().data()),
                         m_rbuffer.size()
                       };
-                      spdlog::info("{}", message);
+
+                      nlohmann::json response = nlohmann::json::parse(message);
+                      if (!response["stream"].is_null())
+                      {
+                        TradeEvent te {response["data"]};
+                        spdlog::info("{}", message);
+                      }
+                      
                       m_rbuffer.consume(m_rbuffer.size());  
-                      this->read(); 
-                    });
+                      this->read(); });
   }
 
   void WebSocketClient::run()

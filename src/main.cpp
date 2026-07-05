@@ -7,7 +7,8 @@
 #include <util/EnvReader.hpp>
 #include <core/EventQueue.hpp>
 #include <core/events/PriceEvent.hpp>
-#include <core/producers/BtcPriceProducer.hpp>
+#include <core/events/TradeEvent.hpp>
+#include <core/producers/TradeEventProducer.hpp>
 #include <core/wsclient/WebSocketClient.hpp>
 
 int main(int argc, char *argv[])
@@ -31,7 +32,7 @@ int main(int argc, char *argv[])
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT"));
 
   bb::EventQueue<bb::PriceEvent, 5> eventQueue;
-  bb::BtcPriceProducer<bb::PriceEvent> btcP(eventQueue);
+  bb::TradeEventProducer<bb::PriceEvent> btcP(eventQueue);
 
   btcP.produce(bb::PriceEvent(5));
 
@@ -44,4 +45,6 @@ int main(int argc, char *argv[])
   })");
   wsc.subscribe(intent);
   wsc.run();
+
+  
 }
