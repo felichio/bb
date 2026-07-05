@@ -7,6 +7,7 @@
 #include <util/EnvReader.hpp>
 #include <core/EventQueue.hpp>
 #include <core/events/PriceEvent.hpp>
+#include <core/producers/BtcPriceProducer.hpp>
 
 
 int main(int argc, char *argv[])
@@ -29,12 +30,9 @@ int main(int argc, char *argv[])
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("API_KEY_TEST"));
 
+  bb::EventQueue<bb::PriceEvent, 5> eventQueue;
+  bb::BtcPriceProducer<bb::PriceEvent> btcP(eventQueue);
 
-  bb::EventQueue<bb::PriceEvent, 5> eq;
-
-  for (int i = 0; i < 10; i++)
-  {
-    eq.push(bb::PriceEvent(i));
-  }
+  btcP.produce(bb::PriceEvent(5));
 
 }
