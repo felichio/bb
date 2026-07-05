@@ -9,7 +9,3 @@ target_sources(
       BASE_DIRS "${CMAKE_SOURCE_DIR}/src"
       FILES "${HEADER_FILES}"
 )
-
-add_subdirectory(events)
-add_subdirectory(producers)
-add_subdirectory(wsclient)
