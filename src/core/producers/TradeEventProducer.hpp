@@ -4,10 +4,10 @@
 namespace bb
 {
   template <typename T>
-  class BtcPriceProducer : public IProducer<T>
+  class TradeEventProducer : public IProducer<T>
   {
   public:
-    BtcPriceProducer(bb::EventQueue<T, 5> &eventQueue) : m_eq{eventQueue} {}
+    TradeEventProducer(bb::EventQueue<T, 5> &eventQueue) : m_eq{eventQueue} {}
     
     
   private:
