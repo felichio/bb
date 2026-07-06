@@ -9,6 +9,7 @@ foreach(test ${SOURCE_FILES})
     GTest::gtest_main
     GTest::gtest
     spdlog::spdlog
+    nlohmann_json::nlohmann_json
     bb
   )
   add_test(NAME ${test} COMMAND ${test})
