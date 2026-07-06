@@ -5,7 +5,8 @@
 
 namespace bb
 {
-  WebSocketClient::WebSocketClient() : m_ioc(),
+  template <typename T>
+  WebSocketClient<T>::WebSocketClient() : m_ioc(),
                                        m_ctx{net::ssl::context::tlsv12},
                                        m_wss{net::make_strand(m_ioc), m_ctx},
                                        m_host{EnvReader::getReader()->getKey("WEBSOCKET_STREAM_HOST")},
@@ -14,7 +15,8 @@ namespace bb
     spdlog::info("Connecting to websocket host: {} on port {}", m_host, m_port);
   }
 
-  void WebSocketClient::connect()
+  template <typename T>
+  void WebSocketClient<T>::connect()
   {
     net::ip::tcp::resolver resolver(m_ioc);
     get_lowest_layer(m_wss).connect(resolver.resolve(m_host, m_port));
@@ -39,7 +41,8 @@ namespace bb
     );
   }
 
-  void WebSocketClient::subscribe(nlohmann::json &intent)
+  template <typename T>
+  void WebSocketClient<T>::subscribe(nlohmann::json &intent)
   {
     m_wbuffer = intent.dump();
     m_wss.async_write(net::buffer(m_wbuffer), [this](auto ec, auto)
@@ -47,7 +50,8 @@ namespace bb
     read();
   }
 
-  void WebSocketClient::read()
+  template <typename T>
+  void WebSocketClient<T>::read()
   {
     m_wss.async_read(m_rbuffer, [this](beast::error_code ec, std::size_t)
                      {
@@ -61,7 +65,8 @@ namespace bb
                       nlohmann::json response = nlohmann::json::parse(message);
                       if (!response["stream"].is_null())
                       {
-                        TradeEvent te {response["data"]};
+                        T te {response["data"]};
+                        m_producer->produce(te);
                         spdlog::info("{}", message);
                       }
                       
@@ -69,8 +74,17 @@ namespace bb
                       this->read(); });
   }
 
-  void WebSocketClient::run()
+  template <typename T>
+  void WebSocketClient<T>::run()
   {
     m_ioc.run();
   }
+
+  template <typename T>
+  void WebSocketClient<T>::registerProducer(IProducer<T> *producer)
+  {
+    m_producer = producer;
+  }
+
+  template class WebSocketClient<TradeEvent>;
 } // bb
