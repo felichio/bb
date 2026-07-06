@@ -1,6 +1,6 @@
 #include <iostream>
 #include <core/EventQueue.hpp>
-#include <core/events/PriceEvent.hpp>
+#include <core/events/TradeEvent.hpp>
 
 
 namespace bb
@@ -8,7 +8,7 @@ namespace bb
   template <typename T, int MAX_SLOTS>
   void EventQueue<T, MAX_SLOTS>::push(EventQueue::EventType &&event)
   {
-    std::cout << "push action " << event << std::endl;
+    std::cout << "push action " << std::endl;
     std::unique_lock<std::mutex> lk(m_mutex);
     m_full.wait(lk, [this] { return (m_eventQueue.size() < MAX_SLOTS); });
     m_eventQueue.push(std::move(event));
@@ -18,7 +18,7 @@ namespace bb
   template <typename T, int MAX_SLOTS>
   void EventQueue<T, MAX_SLOTS>::push(EventQueue::const_reference event)
   {
-    std::cout << "push action " << event << std::endl;
+    std::cout << "push action " << std::endl;
     std::unique_lock<std::mutex> lk(m_mutex);
     m_full.wait(lk, [this] { return (m_eventQueue.size() < MAX_SLOTS); });
     m_eventQueue.push(event);
@@ -37,8 +37,8 @@ namespace bb
     return eventType;
   }
 
-  template class EventQueue<PriceEvent, 5>;
+  template class EventQueue<TradeEvent, 5>;
 
   
 
-} // b
+} // bb
