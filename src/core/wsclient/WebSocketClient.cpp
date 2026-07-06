@@ -65,8 +65,8 @@ namespace bb
                       nlohmann::json response = nlohmann::json::parse(message);
                       if (!response["stream"].is_null())
                       {
-                        T te {response["data"]};
-                        m_producer->produce(te);
+                        T event {response["data"]};
+                        m_producer->produce(event);
                         spdlog::info("{}", message);
                       }
                       
