@@ -1,5 +1,5 @@
 #include <core/producers/TradeEventProducer.hpp>
-#include <core/events/PriceEvent.hpp>
+#include <core/events/TradeEvent.hpp>
 #include <spdlog/spdlog.h>
 
 namespace bb
@@ -11,5 +11,5 @@ namespace bb
     m_eq.push(event);
   }
 
-  template class TradeEventProducer<PriceEvent>;
+  template class TradeEventProducer<TradeEvent>;
 } // bb
