@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.30)
 
 project(BB)
 
+set(CMAKE_CXX_STANDARD 20)
+
 # Boost
 include(cmake/boost.cmake)
 # nlohmann_json

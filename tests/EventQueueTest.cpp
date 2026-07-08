@@ -5,6 +5,7 @@
 #include <core/events/TradeEvent.hpp>
 #include <nlohmann/json.hpp>
 #include <vector>
+#include <semaphore>
 
 class EventQueueTest : public testing::Test
 {
@@ -114,10 +115,11 @@ TEST_F(EventQueueTest, TradeEventWeightOrder)
   std::vector<bb::TradeEvent> actual;
   actual.reserve(numberOfEvents);
 
-  // cv for signaling end of thread (not needed)
-
+  // cv for signaling end of main thread (not needed)
+  std::binary_semaphore pushesFinished(0);
   // Thread running pops
-  std::thread t([&actual, this] () {
+  std::thread t([&actual, &pushesFinished, this] () {
+    pushesFinished.acquire();
     for (size_t i = 0; i < numberOfEvents; i++)
     {
       bb::TradeEvent tradeEvent = this->m_eq.pop();
@@ -130,6 +132,9 @@ TEST_F(EventQueueTest, TradeEventWeightOrder)
   {
     m_eq.push(*it);
   }
+
+  // signal finish
+  pushesFinished.release();
 
   // wait for pops to happen
   t.join();
