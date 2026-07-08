@@ -30,6 +30,21 @@ namespace bb
       marketMaker = te["m"].get<bool>();
     }
 
+    operator nlohmann::json()
+    {
+      nlohmann::json j;
+      j["e"] = this->type;
+      j["E"] = this->eventTime;
+      j["s"] = this->symbol;
+      j["t"] = this->tradeId;
+      j["p"] = this->price;
+      j["q"] = this->quantity;
+      j["T"] = this->tradeTime;
+      j["m"] = this->marketMaker;
+      j["M"] = true; // ignored value
+      return j;
+    }
+
     bool operator==(const TradeEvent &other) const
     {
       return type        == other.type      &&
