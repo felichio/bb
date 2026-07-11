@@ -40,6 +40,7 @@ namespace bb
         m_envmap[key] = value;
       }
     }
+    populateEnv();
   }
 
   void EnvReader::populateEnv()

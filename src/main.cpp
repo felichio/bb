@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
   std::cout << t.dump() << std::endl;
   spdlog::info("OK!");
 
-  bb::EnvReader::getReader()->populateEnv();
+  // bb::EnvReader::getReader()->populateEnv();
 
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("SECRET_TEST"));
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
