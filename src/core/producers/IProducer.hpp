@@ -17,4 +17,4 @@ namespace bb
 
     virtual void delegateEvent(const T &event) = 0;
   };
-} // b
+} // bb
