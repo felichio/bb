@@ -2,7 +2,6 @@
 #include <core/EventQueue.hpp>
 #include <core/events/TradeEvent.hpp>
 
-
 namespace bb
 {
   template <typename T, int MAX_SLOTS>
@@ -10,7 +9,8 @@ namespace bb
   {
     std::cout << "push action " << std::endl;
     std::unique_lock<std::mutex> lk(m_mutex);
-    m_full.wait(lk, [this] { return (m_eventQueue.size() < MAX_SLOTS); });
+    m_full.wait(lk, [this]
+                { return (m_eventQueue.size() < MAX_SLOTS); });
     m_eventQueue.push(std::move(event));
     m_empty.notify_one();
   }
@@ -20,7 +20,8 @@ namespace bb
   {
     std::cout << "push action " << std::endl;
     std::unique_lock<std::mutex> lk(m_mutex);
-    m_full.wait(lk, [this] { return (m_eventQueue.size() < MAX_SLOTS); });
+    m_full.wait(lk, [this]
+                { return (m_eventQueue.size() < MAX_SLOTS); });
     m_eventQueue.push(event);
     m_empty.notify_one();
   }
@@ -30,15 +31,34 @@ namespace bb
   {
     std::cout << "pop action" << std::endl;
     std::unique_lock<std::mutex> lk(m_mutex);
-    m_empty.wait(lk, [this] { return (m_eventQueue.size() != 0); });
-    EventQueue<T, MAX_SLOTS>::EventType eventType = m_eventQueue.top();
+    m_empty.wait(lk, [this]
+                 { return (m_eventQueue.size() != 0); });
+    EventQueue<T, MAX_SLOTS>::EventType event = m_eventQueue.top();
     m_eventQueue.pop();
     m_full.notify_one();
-    return eventType;
+    return event;
+  }
+
+  template <typename T, int MAX_SLOTS>
+  void EventQueue<T, MAX_SLOTS>::registerReceiver(IConsumer<T> *consumer)
+  {
+    m_receivers.push_back(consumer);
+  }
+
+  template <typename T, int MAX_SLOTS>
+  void EventQueue<T, MAX_SLOTS>::run()
+  {
+    std::cout << "RUNNING EventQueue dispatcher loop" << std::endl;
+    while (true)
+    {
+      EventQueue<T, MAX_SLOTS>::EventType event = this->pop(); // blocking
+      for (typename std::vector<IConsumer<T> *>::iterator it = m_receivers.begin(); it != m_receivers.end(); it++)
+      {
+        (*it)->receiveEvent(event);
+      }
+    }
   }
 
   template class EventQueue<TradeEvent, 5>;
-
-  
 
 } // bb

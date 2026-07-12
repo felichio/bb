@@ -4,6 +4,7 @@
 #include <vector>
 #include <mutex>
 #include <condition_variable>
+#include <core/consumers/IConsumer.hpp>
 
 namespace bb
 {
@@ -21,10 +22,15 @@ namespace bb
 
       EventType pop();
 
+      void registerReceiver(IConsumer<T>*);
+
+      void run();
+
     private:
       std::priority_queue<EventType, std::vector<EventType>> m_eventQueue;
       std::mutex m_mutex;
       std::condition_variable m_full;
       std::condition_variable m_empty;
+      std::vector<IConsumer<T>*> m_receivers;
   };
 } // bb
