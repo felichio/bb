@@ -69,8 +69,8 @@ namespace bb
                         m_producer->produce(event);
                         spdlog::info("{}", message);
                       }
-                      
-                      m_rbuffer.consume(m_rbuffer.size());  
+
+                      m_rbuffer.consume(m_rbuffer.size());
                       this->read(); });
   }
 
@@ -78,6 +78,14 @@ namespace bb
   void WebSocketClient<T>::run()
   {
     m_ioc.run();
+  }
+
+  template <typename T>
+  void WebSocketClient<T>::close()
+  {
+    m_wss.async_close(beast::websocket::close_code::normal, [] (beast::error_code ec) {
+      std::cout << ec << std::endl;
+    });
   }
 
   template <typename T>
