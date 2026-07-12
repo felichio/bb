@@ -12,4 +12,5 @@ target_sources(
 
 add_subdirectory(events)
 add_subdirectory(producers)
+add_subdirectory(consumers)
 add_subdirectory(wsclient)
