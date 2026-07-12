@@ -30,7 +30,7 @@ namespace bb
       marketMaker = te["m"].get<bool>();
     }
 
-    operator nlohmann::json()
+    operator nlohmann::json() const
     {
       nlohmann::json j;
       j["e"] = this->type;

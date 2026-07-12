@@ -9,16 +9,10 @@
 #include <core/events/TradeEvent.hpp>
 #include <core/producers/TradeEventProducer.hpp>
 #include <core/wsclient/WebSocketClient.hpp>
+#include <core/consumers/TradeEventConsumer.hpp>
 
 int main(int argc, char *argv[])
 {
-  boost::asio::io_context io_context;
-  boost::beast::flat_buffer buffer;
-
-  nlohmann::json t = {
-      {"kappa", "alg"}};
-
-  std::cout << t.dump() << std::endl;
   spdlog::info("OK!");
 
   // bb::EnvReader::getReader()->populateEnv();
@@ -30,7 +24,17 @@ int main(int argc, char *argv[])
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT"));
 
   bb::EventQueue<bb::TradeEvent, 5> eventQueue;
+  bb::TradeEventConsumer<bb::TradeEvent> tec;
+
+  eventQueue.registerReceiver(&tec);
+
+  std::thread t([&eventQueue] () {
+    eventQueue.run();
+  });
+
   bb::WebSocketClient<bb::TradeEvent> wsc;
   bb::TradeEventProducer<bb::TradeEvent> btcP(eventQueue, wsc);
-  
+
+  t.join();
+
 }
