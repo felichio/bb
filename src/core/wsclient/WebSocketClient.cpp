@@ -66,8 +66,8 @@ namespace bb
                       if (!response["stream"].is_null())
                       {
                         T event {response["data"]};
+                        spdlog::info("[WebSocketClient read] {}", message);
                         m_producer->produce(event);
-                        spdlog::info("{}", message);
                       }
 
                       m_rbuffer.consume(m_rbuffer.size());

@@ -70,6 +70,6 @@ struct fmt::formatter<bb::TradeEvent> : fmt::formatter<std::string>
 {
   auto format(bb::TradeEvent event, format_context &ctx) const -> decltype(ctx.out())
   {
-    return fmt::format_to(ctx.out(), "tag: {}  |  price: {}", event.type, event.symbol);
+    return fmt::format_to(ctx.out(), "type: {}  |  symbol: {}", event.type, event.symbol);
   }
 };
