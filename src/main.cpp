@@ -13,10 +13,6 @@
 
 int main(int argc, char *argv[])
 {
-  spdlog::info("OK!");
-
-  // bb::EnvReader::getReader()->populateEnv();
-
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("SECRET_TEST"));
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
   spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("API_KEY_TEST"));
