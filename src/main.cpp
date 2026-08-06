@@ -24,13 +24,24 @@ int main(int argc, char *argv[])
 
   eventQueue.registerReceiver(&tec);
 
-  std::thread t([&eventQueue] () {
+  std::thread t([&eventQueue] {
     eventQueue.run();
   });
 
   bb::WebSocketClient<bb::TradeEvent> wsc;
   bb::TradeEventProducer<bb::TradeEvent> btcP(eventQueue, wsc);
 
+  std::thread w([&btcP] {
+    btcP.init();
+  });
+
+  spdlog::info("[main thread] sleeping for 10s");
+  std::this_thread::sleep_for(std::chrono::seconds(10));
+
+  wsc.stop();
+  w.join();
+  eventQueue.stop();
   t.join();
 
+  spdlog::warn("[main thread] exiting..");
 }
