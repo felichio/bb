@@ -11,16 +11,21 @@ namespace bb
         m_wsc{webSocketClient}
   {
     m_wsc.registerProducer(this);
-    m_wsc.connect();
-    m_wsc.subscribe(TradeEventProducer::intent);
-    m_wsc.run();
   }
 
   template <typename T>
-  void bb::TradeEventProducer<T>::delegateEvent(const T &event)
+  void TradeEventProducer<T>::delegateEvent(const T &event)
   {
     spdlog::info("[delegateEvent] {}", event);
     m_eq.push(event);
+  }
+
+  template <typename T>
+  void TradeEventProducer<T>::init()
+  {
+    m_wsc.connect();
+    m_wsc.subscribe(TradeEventProducer::intent);
+    m_wsc.run();
   }
 
   template <typename T>
