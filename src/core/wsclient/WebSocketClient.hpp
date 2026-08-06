@@ -34,7 +34,7 @@ namespace bb
     void subscribe(nlohmann::json &intent);
     void read();
     void run();
-    void close();
+    void stop();
     void registerProducer(IProducer<T> *producer);
   };
 

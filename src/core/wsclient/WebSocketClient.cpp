@@ -7,10 +7,10 @@ namespace bb
 {
   template <typename T>
   WebSocketClient<T>::WebSocketClient() : m_ioc(),
-                                       m_ctx{net::ssl::context::tlsv12},
-                                       m_wss{net::make_strand(m_ioc), m_ctx},
-                                       m_host{EnvReader::getReader()->getKey("WEBSOCKET_STREAM_HOST")},
-                                       m_port{EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT")}
+                                          m_ctx{net::ssl::context::tlsv12},
+                                          m_wss{net::make_strand(m_ioc), m_ctx},
+                                          m_host{EnvReader::getReader()->getKey("WEBSOCKET_STREAM_HOST")},
+                                          m_port{EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT")}
   {
     spdlog::info("Connecting to websocket host: {} on port {}", m_host, m_port);
   }
@@ -81,11 +81,12 @@ namespace bb
   }
 
   template <typename T>
-  void WebSocketClient<T>::close()
+  void WebSocketClient<T>::stop()
   {
-    m_wss.async_close(beast::websocket::close_code::normal, [] (beast::error_code ec) {
-      std::cout << ec << std::endl;
-    });
+    net::post(m_wss.get_executor(), [this]()
+
+              { spdlog::warn("posting async_close"); m_wss.async_close(beast::websocket::close_code::normal, [this](beast::error_code ec)
+                                  { spdlog::warn("close handler fired: {}", ec.message()); this->m_ioc.stop(); }); });
   }
 
   template <typename T>
