@@ -17,6 +17,7 @@ namespace bb
   void TradeEventProducer<T>::delegateEvent(const T &event)
   {
     spdlog::info("[delegateEvent] {}", event);
+    eventCounter++;
     m_eq.push(event);
   }
 
@@ -27,6 +28,9 @@ namespace bb
     m_wsc.subscribe(TradeEventProducer::intent);
     m_wsc.run();
   }
+
+  template <typename T>
+  uint32_t TradeEventProducer<T>::eventCounter = 0;
 
   template <typename T>
   nlohmann::json TradeEventProducer<T>::intent = nlohmann::json::parse(R"({

@@ -11,12 +11,12 @@ namespace bb
   public:
     TradeEventProducer(bb::EventQueue<T, 5> &eventQueue, bb::WebSocketClient<T> &webSocketClient);
     void init();
+    static uint32_t eventCounter;
 
   private:
     bb::EventQueue<T, 5> &m_eq;
     bb::WebSocketClient<T> &m_wsc;
     virtual void delegateEvent(const T &event) override;
-    
 
     static nlohmann::json intent;
   };
