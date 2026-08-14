@@ -10,6 +10,10 @@
 #include <core/producers/TradeEventProducer.hpp>
 #include <core/wsclient/WebSocketClient.hpp>
 #include <core/consumers/TradeEventConsumer.hpp>
+#include <core/statistics/MovingAverage.hpp>
+#include <core/statistics/SimpleMovingAverage.hpp>
+#include <core/statistics/TimeLiterals.hpp>
+#include <memory>
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +28,8 @@ int main(int argc, char *argv[])
 
   eventQueue.registerReceiver(&tec);
 
+  tec.attach(std::unique_ptr<bb::MovingAverage>(new bb::SimpleMovingAverage(15_m)));
+
   std::thread t([&eventQueue] {
     eventQueue.run();
   });
@@ -35,13 +41,15 @@ int main(int argc, char *argv[])
     btcP.init();
   });
 
-  spdlog::info("[main thread] sleeping for 10s");
-  std::this_thread::sleep_for(std::chrono::seconds(10));
+  spdlog::info("[main thread] sleeping for 5s");
+  std::this_thread::sleep_for(std::chrono::seconds(5));
 
   wsc.stop();
   w.join();
   eventQueue.stop();
   t.join();
+
+  spdlog::info("[main thread] Total events: {}", bb::TradeEventProducer<bb::TradeEvent>::eventCounter);
 
   spdlog::warn("[main thread] exiting..");
 }
