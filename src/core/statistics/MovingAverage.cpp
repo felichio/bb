@@ -2,7 +2,13 @@
 #include <iostream>
 #include <iomanip>
 
-bb::MovingAverage::MovingAverage(uint64_t dt): m_dt {dt} {};
+bb::MovingAverage::MovingAverage(uint64_t dt): 
+  m_dt {dt},
+  m_average {0},
+  m_oldest_index {0}
+{
+
+};
 
 bb::MovingAverage::~MovingAverage()
 {

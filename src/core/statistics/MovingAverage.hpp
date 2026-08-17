@@ -14,5 +14,7 @@ namespace bb
   protected:
     std::vector<std::pair<uint64_t, double>> m_buffer;
     uint64_t m_dt;
+    double m_average;
+    size_t m_oldest_index;
   };
 } // bb
