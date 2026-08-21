@@ -5,7 +5,7 @@
 
 bb::SimpleMovingAverage::SimpleMovingAverage(uint64_t dt): MovingAverage(dt) {};
 
-void bb::SimpleMovingAverage::update(const std::pair<uint64_t, double>& item)
+double bb::SimpleMovingAverage::update(const std::pair<uint64_t, double>& item)
 {
   spdlog::info("[SimpleMovingAverage] updating..");
   std::chrono::milliseconds now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
@@ -25,6 +25,7 @@ void bb::SimpleMovingAverage::update(const std::pair<uint64_t, double>& item)
 
   m_average = (n * m_average + item.second - sum(removed)) / (n - removed.size() + 1);
   spdlog::info("average: {}", m_average);
+  return m_average;
 }
 
 double bb::SimpleMovingAverage::sum(const std::vector<std::pair<uint64_t, double>>& items)

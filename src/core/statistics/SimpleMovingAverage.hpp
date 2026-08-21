@@ -8,7 +8,7 @@ namespace bb
     public:
       SimpleMovingAverage(uint64_t dt);
 
-      void update(const std::pair<uint64_t, double>&) override;
+      double update(const std::pair<uint64_t, double>&) override;
       private:
       double sum(const std::vector<std::pair<uint64_t, double>>&);
   };
