@@ -36,9 +36,9 @@ protected:
 
 TEST_F(EventQueueTest, PushTradeEventAndPop)
 {
-  std::promise<bb::TradeEvent> actualPromise;
+  std::promise<std::optional<bb::TradeEvent>> actualPromise;
   std::thread t1([&]() {
-    const bb::TradeEvent actual = m_eq.pop();
+    const std::optional<bb::TradeEvent> actual = m_eq.pop();
     actualPromise.set_value(actual);
   });
 
@@ -55,7 +55,7 @@ TEST_F(EventQueueTest, PushTradeEventAndPop)
   })"));
 
   m_eq.push(expected);
-  const bb::TradeEvent actual = actualPromise.get_future().get();
+  const std::optional<bb::TradeEvent> actual = actualPromise.get_future().get();
   t1.join();
   EXPECT_EQ(expected, actual);
 }
@@ -122,8 +122,9 @@ TEST_F(EventQueueTest, TradeEventWeightOrder)
     pushesFinished.acquire();
     for (size_t i = 0; i < numberOfEvents; i++)
     {
-      bb::TradeEvent tradeEvent = this->m_eq.pop();
-      actual.push_back(tradeEvent);
+      std::optional<bb::TradeEvent> tradeEvent = this->m_eq.pop();
+      if (tradeEvent)
+        actual.push_back(tradeEvent.value());
     }
   });
 

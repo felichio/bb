@@ -22,7 +22,8 @@ namespace bb
   {
     std::unique_lock<std::mutex> lk(m_mutex);
     m_full.wait(lk, [this]
-                { return (m_eventQueue.size() < MAX_SLOTS); });
+                { return (m_eventQueue.size() < MAX_SLOTS) || m_stop; });
+    if (m_stop) return;
     m_eventQueue.push(event);
     m_empty.notify_one();
   }
