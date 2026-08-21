@@ -28,7 +28,7 @@ double bb::SimpleMovingAverage::update(const std::pair<uint64_t, double>& item)
   return m_average;
 }
 
-double bb::SimpleMovingAverage::sum(const std::vector<std::pair<uint64_t, double>>& items)
+double bb::SimpleMovingAverage::sum(const std::vector<std::pair<uint64_t, double>>& items) const
 {
   double s = 0;
   std::cout << "sum running" << std::endl;

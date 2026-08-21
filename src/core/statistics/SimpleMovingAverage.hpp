@@ -10,6 +10,6 @@ namespace bb
 
       double update(const std::pair<uint64_t, double>&) override;
       private:
-      double sum(const std::vector<std::pair<uint64_t, double>>&);
+      double sum(const std::vector<std::pair<uint64_t, double>>&) const;
   };
 } // bb
