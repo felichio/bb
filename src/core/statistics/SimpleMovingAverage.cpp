@@ -14,6 +14,12 @@ double bb::SimpleMovingAverage::update(const std::pair<uint64_t, double>& item)
   m_buffer.push_back(item);
   size_t n = m_buffer.size() - 1 - m_oldest_index; // previous count
 
+  if (m_buffer.back().first < window)
+  {
+    m_oldest_index++; // force initial state in case of stale entries
+    return m_average; // return previous average
+  }
+
   std::vector<std::pair<uint64_t, double>> removed;
 
   while (m_oldest_index < m_buffer.size() && m_buffer[m_oldest_index].first < window)
