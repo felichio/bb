@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
 
   eventQueue.registerReceiver(&tec);
 
-  tec.attach(std::unique_ptr<bb::MovingAverage>(new bb::SimpleMovingAverage(15_m)));
+  tec.attach(std::unique_ptr<bb::MovingAverage>(new bb::SimpleMovingAverage(15_s)));
 
   std::thread t([&eventQueue] {
     eventQueue.run();
