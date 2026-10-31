@@ -15,14 +15,23 @@
 #include <core/statistics/TimeLiterals.hpp>
 #include <memory>
 
+void init()
+{
+  #ifdef LOG_LEVEL
+  spdlog::set_level(spdlog::level::LOG_LEVEL);
+  #endif
+
+  spdlog::debug("Env: " + bb::EnvReader::getReader()->getKey("SECRET_TEST"));
+  spdlog::debug("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
+  spdlog::debug("Env: " + bb::EnvReader::getReader()->getKey("API_KEY_TEST"));
+  spdlog::debug("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_HOST"));
+  spdlog::debug("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT"));
+}
+
 int main(int argc, char *argv[])
 {
-  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("SECRET_TEST"));
-  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_MARKET_STREAM_TEST_URL"));
-  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("API_KEY_TEST"));
-  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_HOST"));
-  spdlog::info("Env: " + bb::EnvReader::getReader()->getKey("WEBSOCKET_STREAM_PORT"));
-
+  
+  init();
   bb::EventQueue<bb::TradeEvent, 5> eventQueue;
   bb::TradeEventConsumer<bb::TradeEvent> tec;
 
@@ -41,15 +50,14 @@ int main(int argc, char *argv[])
     btcP.init();
   });
 
-  spdlog::info("[main thread] sleeping for 5s");
+  spdlog::warn("[main thread] sleeping for 5s");
   std::this_thread::sleep_for(std::chrono::seconds(5));
-
   wsc.stop();
   w.join();
   eventQueue.stop();
   t.join();
 
-  spdlog::info("[main thread] Total events: {}", bb::TradeEventProducer<bb::TradeEvent>::eventCounter);
+  spdlog::warn("[main thread] Total events: {}", bb::TradeEventProducer<bb::TradeEvent>::eventCounter);
 
   spdlog::warn("[main thread] exiting..");
 }

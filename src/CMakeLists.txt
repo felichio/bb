@@ -14,6 +14,10 @@ else()
   )
 endif()
 
+if(LOG_LEVEL)
+  target_compile_definitions(bb PUBLIC LOG_LEVEL=${LOG_LEVEL})
+endif()
+
 
 add_subdirectory(util)
 add_subdirectory(core)
